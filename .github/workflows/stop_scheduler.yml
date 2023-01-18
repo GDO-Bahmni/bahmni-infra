@@ -3,8 +3,8 @@ name: Stop EKS Node Group & RDS in AWS
 on:
   workflow_dispatch:
   schedule:
-    # Runs "At 09:00 PM on every day. Below time is mentioned in UTC time zone" (see https://crontab.guru)
-    - cron: '30 15 * * *'
+    # Runs "At 07:00 PM on Mon-Fri. Below time is mentioned in UTC time zone" (see https://crontab.guru)
+    - cron: '30 13 * * 1-5'
 
 jobs:
   stop-nodegroup:
@@ -13,8 +13,7 @@ jobs:
     strategy:
       matrix:
         nodegroup: [
-          { name: 'nonprod',minSize: 0,maxSize: 2,desiredSize: 0 },
-          { name: 'performance',minSize: 0,maxSize: 1,desiredSize: 0 }
+          { name: 'nonprod',minSize: 0,maxSize: 1,desiredSize: 0 }
         ]
     env:
       CLUSTER_NAME: bahmni-cluster-nonprod
@@ -52,17 +51,17 @@ jobs:
           role-duration-seconds: 1200  # 20 mins
           role-session-name: BahmniInfraAdminSession
 
-      - name: Start ${{ env.RDS_NAME }} RDS Instance
+      - name: Stop ${{ env.RDS_NAME }} RDS Instance
         run: |
           aws rds stop-db-instance --db-instance-identifier ${{ env.RDS_NAME }} > /dev/null 2>&1
 
-  post-notification:
-    name: Post Slack Notification
-    needs: stop-rds
-    runs-on: ubuntu-latest
-    env:
-      RDS_NAME: bahmni-rds-nonprod
-    steps:
-      - name: Post Deployment Status To Slack
-        run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":":white_check_mark:  Hello, EKS Node Groups & RDS Instance stopped for the day"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+  # post-notification:
+  #   name: Post Slack Notification
+  #   needs: stop-rds
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     RDS_NAME: bahmni-rds-nonprod
+  #   steps:
+  #     - name: Post Deployment Status To Slack
+  #       run: |
+  #         curl -X POST -H 'Content-type: application/json' --data '{"text":":white_check_mark:  Hello, EKS Node Groups & RDS Instance stopped for the day"}' ${{ secrets.SLACK_WEBHOOK_URL }}
