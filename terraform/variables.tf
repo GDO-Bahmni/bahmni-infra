@@ -58,18 +58,18 @@ variable "bastion_public_access_cidr" {
   description = "CIDR Block used for SSH Access of Bastion Host"
 }
 
-variable "domain_name" {
-  type        = string
-  description = "Domain Name for Amazon SES service"
-}
+# variable "domain_name" {
+#   type        = string
+#   description = "Domain Name for Amazon SES service"
+# }
 
-variable "hosted_zone_id" {
-  type        = string
-  description = "Route 53 Hosted Zone ID for the domain_name"
-}
+# variable "hosted_zone_id" {
+#   type        = string
+#   description = "Route 53 Hosted Zone ID for the domain_name"
+# }
 
-variable "enable_ses" {
-  type        = bool
-  default     = false
-  description = "Toggle for SES Module"
-}
+# variable "enable_ses" {
+#   type        = bool
+#   default     = false
+#   description = "Toggle for SES Module"
+# }

@@ -54,13 +54,13 @@ module "rds" {
   rds_instance_class = var.rds_instance_class
 }
 
-module "ses" {
-  source               = "./modules/ses"
-  count                = var.enable_ses ? 1 : 0
-  depends_on           = [module.vpc]
-  domain_name          = var.domain_name
-  zone_id              = var.hosted_zone_id
-}
+# module "ses" {
+#   source               = "./modules/ses"
+#   count                = var.enable_ses ? 1 : 0
+#   depends_on           = [module.vpc]
+#   domain_name          = var.domain_name
+#   zone_id              = var.hosted_zone_id
+# }
 
 module "bastion" {
   source                   = "./modules/bastion_host"
